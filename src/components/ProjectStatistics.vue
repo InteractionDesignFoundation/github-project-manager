@@ -1,21 +1,26 @@
 <template>
     <section>
         <h2 class="title">Project statistics</h2>
-        <Column
-                v-for="column in columns"
-                :key="column.id"
-                :column="column"
-        />
+        <PulseLoader v-if="isColumnActionsBlocked" class="has-text-centered"/>
+        <div v-if="!isColumnActionsBlocked">
+            <Column
+                    v-for="column in columns"
+                    :key="column.id"
+                    :column="column"
+            />
+        </div>
     </section>
 </template>
 
 <script>
     import Column from './Column.vue';
+    import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
 
     export default {
       name: 'ProjectStatistics',
       components: {
-        Column: Column
+        Column,
+        PulseLoader
       },
       props: {
         octoGraphClient: {
@@ -31,6 +36,7 @@
         return {
           project: undefined,
           columns: [],
+          isColumnActionsBlocked: true,
         };
       },
       created: function () {
@@ -84,7 +90,8 @@ query {
             .then(project => {
               this.project = project;
               this.columns = project.columns.nodes;
-            });
+            })
+            .then(() => this.isColumnActionsBlocked = false)
         },
       }
     }
