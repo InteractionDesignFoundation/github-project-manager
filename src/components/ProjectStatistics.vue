@@ -4,6 +4,7 @@
         <PulseLoader v-if="isColumnActionsBlocked" class="has-text-centered"/>
         <div v-if="!isColumnActionsBlocked">
             <Column
+                    :octo-graph-client="octoGraphClient"
                     v-for="column in columns"
                     :key="column.id"
                     :column="column"

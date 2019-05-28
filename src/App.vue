@@ -1,5 +1,7 @@
 <template>
     <main id="app">
+        <notifications group="app" position="bottom right" width="400"/>
+
         <section class="hero">
             <img
                     class="hero__image"
@@ -30,6 +32,11 @@
   import Settings from './components/Settings.vue'
   import ProjectSelector from './components/ProjectSelector.vue'
   import ProjectStatistics from './components/ProjectStatistics.vue'
+
+  import Vue from 'vue'
+
+  import Notifications from 'vue-notification'
+  Vue.use(Notifications);
 
   export default {
     name: 'app',

@@ -10,6 +10,10 @@
   export default {
     name: 'column',
     props: {
+      octoGraphClient: {
+        type: Object,
+        required: true,
+      },
       column: {
         type: Object,
         required: true
@@ -26,7 +30,39 @@
         return this.column.purpose === 'DONE';
       },
       filloutByIssues: function () {
-        console.log(this.column);
+        const labelsIssuesHaveToAddToBacklog = `"next sprint", "urgency:high ⚡️"`;
+        const query = `
+{
+  repository(owner: "InteractionDesignFoundation", name: "IDF-web") {
+    issues (first: 100, filterBy: {
+      labels: [${labelsIssuesHaveToAddToBacklog}]
+      states: OPEN
+    }) {
+      totalCount
+      nodes {
+        title
+        labels (first: 10) {
+          nodes {
+            name
+          }
+        }
+      }
+    }
+  }
+}
+`;
+        return this.octoGraphClient
+          .json({query: query})
+          .post()
+          .json(json => json.data.repository.issues.nodes)
+          .then(issues => {
+            this.$notify({
+              group: 'app',
+              title: `Success!`,
+              text: `Found ${issues.length} issues`
+            });
+            console.log(issues);
+          });
       },
       cleanupCards: function () {
         console.log(this.column);
