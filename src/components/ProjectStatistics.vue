@@ -60,6 +60,7 @@ query {
           cards (first: 100) {
             totalCount
             nodes {
+              id
               content {
                 __typename
                 ... on Issue {

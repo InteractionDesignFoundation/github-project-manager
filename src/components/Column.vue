@@ -7,6 +7,12 @@
 </template>
 
 <script>
+  import { GraphQLClient } from 'graphql-request';
+
+  const client = new GraphQLClient('https://api.github.com/graphql', { headers: {
+      authorization: `Bearer ${localStorage.getItem('githubAccessToken')}`,
+    } });
+
   export default {
     name: 'column',
     props: {
@@ -61,11 +67,35 @@
               title: `Success!`,
               text: `Found ${issues.length} issues`
             });
-            console.log(issues);
           });
       },
       cleanupCards: function () {
-        console.log(this.column);
+        const cardIds = this.column.cards.nodes.map(card => card.id);
+
+        /** @see https://developer.github.com/v4/mutation/deleteprojectcard/ */
+        const query = `
+mutation CleanupDoneColumn (${cardIds.map((cardId, index) => `$card${index}: ID!`).join(', ')}) {
+  ${cardIds.map((cardId, index) => `cardRemoval${index}: deleteProjectCard (input: {cardId: $card${index}}) {
+    column {
+      id
+    }
+  }`).join('\n') }
+}
+`;
+
+        const variables = {};
+        cardIds.forEach((cardId, index) => {
+          variables[`card${index}`] = cardId;
+        });
+
+        return client.request(query, variables)
+          .then(removals => {
+            this.$notify({
+              group: 'app',
+              title: `Success!`,
+              text: `Removed ${Object.keys(removals).length} card(s) from ${this.column.name}`
+            });
+          });
       }
     }
   }
