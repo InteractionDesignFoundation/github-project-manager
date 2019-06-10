@@ -23,6 +23,8 @@
 </template>
 
 <script>
+  import { repoSettings } from '../repoSettings';
+
   export default {
     name: 'ProjectSelector',
     props: {
@@ -49,7 +51,7 @@
       fetchProjects: function () {
         const query = `
 query {
-  organization(login: "InteractionDesignFoundation") {
+  organization(login: "${repoSettings.owner}") {
     projects (first:10, states: OPEN) {
       nodes {
         number

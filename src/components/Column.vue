@@ -1,13 +1,14 @@
 <template>
     <div>
         {{ column.name }}
-        <button v-if="isTodo()" @click="filloutByIssues">Fill out by Issues</button>
+        <button v-if="isTodo()" @click="fillOutByIssues" title="Issues marked by special labels">Fill out by Issues</button>
         <button v-if="isDone()" @click="cleanupCards">Cleanup</button>
     </div>
 </template>
 
 <script>
   import { GraphQLClient } from 'graphql-request';
+  import { repoSettings } from '../repoSettings';
 
   const labelsToFillOutBacklog = [
     'next sprint',
@@ -40,13 +41,13 @@
       isDone: function () {
         return this.column.purpose === 'DONE';
       },
-      filloutByIssues: function () {
+      fillOutByIssues: function () {
         const labelsIssuesHaveToAddToBacklog = labelsToFillOutBacklog
           .map(label => `"${label}"`)
           .join(', ');
         const query = `
 {
-  repository(owner: "InteractionDesignFoundation", name: "IDF-web") {
+  repository(owner: "${repoSettings.owner}", name: "${repoSettings.name}") {
     issues (first: 100, filterBy: {
       labels: [${labelsIssuesHaveToAddToBacklog}]
       states: OPEN
