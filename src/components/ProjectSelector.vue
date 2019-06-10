@@ -23,7 +23,7 @@
 </template>
 
 <script>
-  import { repoSettings } from '../repoSettings';
+  import { repoConfig } from '../repoConfig';
 
   export default {
     name: 'ProjectSelector',
@@ -51,7 +51,7 @@
       fetchProjects: function () {
         const query = `
 query {
-  organization(login: "${repoSettings.owner}") {
+  organization(login: "${repoConfig.owner}") {
     projects (first:10, states: OPEN) {
       nodes {
         number

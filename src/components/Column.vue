@@ -8,7 +8,7 @@
 
 <script>
   import { GraphQLClient } from 'graphql-request';
-  import { repoSettings } from '../repoSettings';
+  import { repoConfig } from '../repoConfig';
 
   const labelsToFillOutBacklog = [
     'next sprint',
@@ -47,7 +47,7 @@
           .join(', ');
         const query = `
 {
-  repository(owner: "${repoSettings.owner}", name: "${repoSettings.name}") {
+  repository(owner: "${repoConfig.owner}", name: "${repoConfig.name}") {
     issues (first: 100, filterBy: {
       labels: [${labelsIssuesHaveToAddToBacklog}]
       states: OPEN
