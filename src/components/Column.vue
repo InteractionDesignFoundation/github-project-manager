@@ -9,6 +9,7 @@
 <script>
   import { GraphQLClient } from 'graphql-request';
   import { repo } from '../repoConfig';
+  import { get as getSetting } from '../settingsStore';
 
   const labelsToFillOutBacklog = [
     'next sprint',
@@ -16,7 +17,7 @@
   ];
 
   const client = new GraphQLClient('https://api.github.com/graphql', { headers: {
-      authorization: `Bearer ${localStorage.getItem('githubAccessToken')}`,
+      authorization: `Bearer ${getSetting('githubAccessToken')}`,
     } });
 
   export default {

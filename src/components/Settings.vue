@@ -37,12 +37,14 @@
 </template>
 
 <script>
+  import { get as getSetting, set as setSetting } from '../settingsStore';
+
   export default {
     name: "Settings",
     props: {},
     data() {
       return {
-        githubAccessToken: localStorage.getItem('githubAccessToken') || '',
+        githubAccessToken: getSetting('githubAccessToken') || '',
         areSettingsOpen: true,
       };
     },
@@ -55,7 +57,7 @@
     },
     methods: {
       save: function () {
-        localStorage.setItem('githubAccessToken', this.githubAccessToken);
+        setSetting('githubAccessToken', this.githubAccessToken);
         this.emitEventWithSettings();
       },
       emitEventWithSettings: function () {
