@@ -3,6 +3,7 @@
         {{ column.name }}
         <button v-if="isTodo()" @click="fillOutByIssues" title="Issues marked by special labels">Fill out by Issues</button>
         <button v-if="isTodo() || isDone()" @click="cleanupCards">Cleanup column</button>
+        <button @click="removeNextReleaseLabels">Remove "next release" labels</button>
     </div>
 </template>
 
@@ -112,6 +113,35 @@ mutation AddProjectCardInput ($columnId: ID!, ${devIssuesNotInThisColumn.map((is
               group: 'app',
               title: `Success!`,
               text: `Found and added ${cards.length} issues to the ${this.column.name}`
+            });
+          });
+      },
+      removeNextReleaseLabels: function () {
+        const issuesFromColumn = this.column.cards.nodes.map(card => card.content);
+        if (issuesFromColumn.length === 0) {
+          return Promise.resolve([]);
+        }
+        /** @see https://developer.github.com/v4/mutation/removelabelsfromlabelable/ */
+        const query = `
+mutation RemoveLabelsFromIssues ($nextSprintLabelId: ID!, ${issuesFromColumn.map((issue, index) => `$issueId${index}: ID!`).join(', ')}) {
+  ${issuesFromColumn.map((issue, index) => `labelRemoval${index}: removeLabelsFromLabelable (input: {labelIds: [$nextSprintLabelId], labelableId: $issueId${index}}) {
+    clientMutationId
+  }`).join('\n')}
+}
+`;
+
+        const variables = {};
+        issuesFromColumn.forEach((issue, index) => {
+          variables[`issueId${index}`] = issue.id;
+        });
+        variables.nextSprintLabelId = 'MDU6TGFiZWw3NjQxMjEzOTI='; // 05:Label764121392
+
+        return client.request(query, variables)
+          .then(labelables => {
+            this.$notify({
+              group: 'app',
+              title: `Success!`,
+              text: `Removed ${Object.keys(labelables).length} label(s) from cards`
             });
           });
       },
