@@ -2,8 +2,8 @@
     <div class="columnControls">
         <div class="buttons">
         {{ column.name }}
-        <button v-if="isTodo()" @click="fillOutByIssues" title="Issues marked by special labels" class="button is-small is-light">Fill out by Issues</button>
-        <button v-if="isTodo() || isDone()" @click="cleanupCards" class="button is-small is-light">Cleanup column</button>
+        <button v-if="isTodo()" @click="fillOutByIssues" title="Issues marked by special labels" class="button is-small is-primary">Fill out by Issues</button>
+        <button v-if="isTodo() || isDone()" @click="cleanupCards" class="button is-small is-danger">Cleanup column</button>
         <button @click="removeNextReleaseLabels" class="button is-small is-light">Remove "next release" labels</button>
         </div>
     </div>
