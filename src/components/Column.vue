@@ -1,9 +1,11 @@
 <template>
-    <div>
+    <div class="columnControls">
+        <div class="buttons">
         {{ column.name }}
-        <button v-if="isTodo()" @click="fillOutByIssues" title="Issues marked by special labels">Fill out by Issues</button>
-        <button v-if="isTodo() || isDone()" @click="cleanupCards">Cleanup column</button>
-        <button @click="removeNextReleaseLabels">Remove "next release" labels</button>
+        <button v-if="isTodo()" @click="fillOutByIssues" title="Issues marked by special labels" class="button is-small is-light">Fill out by Issues</button>
+        <button v-if="isTodo() || isDone()" @click="cleanupCards" class="button is-small is-light">Cleanup column</button>
+        <button @click="removeNextReleaseLabels" class="button is-small is-light">Remove "next release" labels</button>
+        </div>
     </div>
 </template>
 
@@ -176,3 +178,9 @@ mutation CleanupDoneColumn (${cardIds.map((cardId, index) => `$card${index}: ID!
     }
   }
 </script>
+
+<style scoped>
+    .columnControls {
+        margin-bottom: 0.5rem;
+    }
+</style>

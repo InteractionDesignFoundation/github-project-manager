@@ -98,7 +98,6 @@
         background-color: var(--white);
         padding: var(--spacing-md);
     }
-
 </style>
 
 <style scoped>
