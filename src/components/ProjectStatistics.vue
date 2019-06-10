@@ -16,7 +16,7 @@
 <script>
     import Column from './Column.vue';
     import PulseLoader from 'vue-spinner/src/PulseLoader.vue'
-    import { repoConfig } from '../repoConfig';
+    import { repo } from '../repoConfig';
 
     export default {
       name: 'ProjectStatistics',
@@ -48,7 +48,7 @@
         loadProjectData: function () {
           const query = `
 query {
-  organization(login: "${repoConfig.owner}") {
+  organization(login: "${repo.owner}") {
     project (number: ${this.selectedProjectId}) {
       name
       body
