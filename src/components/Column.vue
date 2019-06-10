@@ -2,7 +2,7 @@
     <div>
         {{ column.name }}
         <button v-if="isTodo()" @click="fillOutByIssues" title="Issues marked by special labels">Fill out by Issues</button>
-        <button v-if="isDone()" @click="cleanupCards">Cleanup</button>
+        <button v-if="isTodo() || isDone()" @click="cleanupCards">Cleanup column</button>
     </div>
 </template>
 
