@@ -65,10 +65,12 @@ query {
               content {
                 __typename
                 ... on Issue {
+                  id
                   title
                   number
                   labels (first: 50) {
                     nodes {
+                      id
                       name
                     }
                   }

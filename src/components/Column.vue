@@ -55,7 +55,14 @@
     }) {
       totalCount
       nodes {
+        id
         title
+        number
+        assignees (first: 5)  {
+          nodes {
+            login
+          }
+        }
         labels (first: 10) {
           nodes {
             name
@@ -71,10 +78,40 @@
           .post()
           .json(json => json.data.repository.issues.nodes)
           .then(issues => {
+            const devLogins = getSetting('devLogins').split(',').map(loginWithWhitespace => loginWithWhitespace.trim());
+
+            return issues.filter(issue => {
+              const assigneesLogins = issue.assignees.nodes.map(assignee => assignee.login);
+              return assigneesLogins.some(assigneeLogin => devLogins.includes(assigneeLogin));
+            });
+          })
+          .then(devIssuesNotInThisColumn => {
+            /** @see https://developer.github.com/v4/mutation/addprojectcard/ */
+            const query = `
+mutation AddProjectCardInput ($columnId: ID!, ${devIssuesNotInThisColumn.map((issue, index) => `$issueNumber${index}: ID!`).join(', ')}) {
+  ${devIssuesNotInThisColumn.map((issue, index) => `createCard${index}: addProjectCard (input: {projectColumnId: $columnId, contentId: $issueNumber${index}}) {
+    cardEdge {
+      node {
+        id
+        content
+      }
+    }
+  }`).join('\n')}
+}
+`;
+            const variables = {};
+            devIssuesNotInThisColumn.forEach((issue, index) => {
+              variables[`issueNumber${index}`] = issue.id;
+            });
+            variables.columnId = this.column.id;
+
+            return client.request(query, variables)
+          })
+          .then(cards => {
             this.$notify({
               group: 'app',
               title: `Success!`,
-              text: `Found and added ${issues.length} issues to the backlog`
+              text: `Found and added ${cards.length} issues to the ${this.column.name}`
             });
           });
       },

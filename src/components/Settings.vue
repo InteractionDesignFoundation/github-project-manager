@@ -25,6 +25,21 @@
           </small>
         </div>
 
+        <div class="field">
+          <label
+            for="devLogins"
+            class="label">GitHub logins of developers (comma-separated)</label>
+          <div class="control">
+            <input
+              id="devLogins"
+              v-model="devLogins"
+              class="input"
+              type="text"
+              required
+              minlength="3">
+          </div>
+        </div>
+
         <div>
           <button
             type="submit"
@@ -45,11 +60,12 @@
     data() {
       return {
         githubAccessToken: getSetting('githubAccessToken') || '',
+        devLogins: getSetting('devLogins') || '',
         areSettingsOpen: true,
       };
     },
     mounted: function () {
-      const areSettingsSaved = this.githubAccessToken;
+      const areSettingsSaved = this.githubAccessToken && this.devLogins;
       if (areSettingsSaved) {
         this.areSettingsOpen = false;
         this.emitEventWithSettings();
@@ -57,12 +73,15 @@
     },
     methods: {
       save: function () {
+        // this.devLogins = this.devLogins.split(',').map(loginWithWhitespace => loginWithWhitespace.trim());
         setSetting('githubAccessToken', this.githubAccessToken);
+        setSetting('devLogins', this.devLogins);
         this.emitEventWithSettings();
       },
       emitEventWithSettings: function () {
         this.$emit('settings-set', {
           githubAccessToken: this.githubAccessToken,
+          devLogins: this.devLogins,
         });
       },
     },
