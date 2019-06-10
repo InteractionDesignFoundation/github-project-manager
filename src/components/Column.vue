@@ -9,6 +9,11 @@
 <script>
   import { GraphQLClient } from 'graphql-request';
 
+  const labelsToFillOutBacklog = [
+    'next sprint',
+    'urgency:high ⚡️',
+  ];
+
   const client = new GraphQLClient('https://api.github.com/graphql', { headers: {
       authorization: `Bearer ${localStorage.getItem('githubAccessToken')}`,
     } });
@@ -36,7 +41,9 @@
         return this.column.purpose === 'DONE';
       },
       filloutByIssues: function () {
-        const labelsIssuesHaveToAddToBacklog = `"next sprint", "urgency:high ⚡️"`;
+        const labelsIssuesHaveToAddToBacklog = labelsToFillOutBacklog
+          .map(label => `"${label}"`)
+          .join(', ');
         const query = `
 {
   repository(owner: "InteractionDesignFoundation", name: "IDF-web") {
@@ -65,7 +72,7 @@
             this.$notify({
               group: 'app',
               title: `Success!`,
-              text: `Found ${issues.length} issues`
+              text: `Found and added ${issues.length} issues to the backlog`
             });
           });
       },
