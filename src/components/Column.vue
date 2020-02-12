@@ -4,7 +4,7 @@
         {{ column.name }}
         <button v-if="isTodo()" @click="fillOutByIssues" title="Issues marked by special labels" class="button is-small is-primary">Fill out by Issues</button>
         <button v-if="isTodo() || isDone()" @click="cleanupCards" class="button is-small is-danger">Cleanup column</button>
-        <button @click="removeNextReleaseLabels" class="button is-small is-light">Remove "next release" labels</button>
+        <button @click="removeNextReleaseLabels" class="button is-small is-light">Remove "next sprint" labels</button>
         </div>
     </div>
 </template>
