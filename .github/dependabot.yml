@@ -1,12 +1,14 @@
 version: 2
 updates:
-- package-ecosystem: npm
-  directory: "/"
-  schedule:
-    interval: monthly
-    time: "04:00"
-  open-pull-requests-limit: 10
-  reviewers:
-  - lptn
-  assignees:
-  - idf-bot
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "npm dependencies"
+    reviewers:
+      - hasan-wajahat
+    assignees:
+      - idf-bot
