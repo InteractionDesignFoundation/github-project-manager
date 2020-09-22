@@ -4,7 +4,7 @@
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/aa3a2a5d-abb2-4c16-b4f7-2b97d8179c68/deploy-status)](https://app.netlify.com/sites/ghpm/deploys)
 
-Link: https://ghpm.netlify.com/
+Link: https://ghpm.netlify.app/
 
 ## Project setup
 ```
